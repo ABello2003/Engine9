@@ -1,0 +1,15 @@
+# Engine9 example: force calculation
+
+let mass = 10
+let accel = 9.8
+let force = mass * accel
+print force
+
+let velocity = 3
+let energy = 0.5 * mass * velocity * velocity
+print energy
+
+let voltage = 12
+let resistance = 4
+let current = voltage / resistance
+print current
