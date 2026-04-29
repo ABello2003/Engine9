@@ -1,0 +1,34 @@
+# Engine9 Engineering Formula Examples
+
+let mass = 10
+let accel = 9.8
+let forceValue = force(mass, accel)
+print forceValue
+
+let velocity = 3
+let energy = kinetic_energy(mass, velocity)
+print energy
+
+let voltage = 12
+let resistance = 4
+let currentValue = ohm_current(voltage, resistance)
+print currentValue
+
+let distance = 20
+let workValue = work(forceValue, distance)
+print workValue
+
+let time = 5
+let powerValue = power(workValue, time)
+print powerValue
+
+let area = 2
+let pressureValue = pressure(forceValue, area)
+print pressureValue
+
+let volume = 5
+let densityValue = density(mass, volume)
+print densityValue
+
+let momentumValue = momentum(mass, velocity)
+print momentumValue
