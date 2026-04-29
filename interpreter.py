@@ -1,61 +1,30 @@
-from symbol_table import SymbolTable
+from symbolTable import SymbolTable
+import functions
 
-class Engine9Interpreter:
-    def __init__(self):
-        self.symbol_table = SymbolTable()
+symbol_table = SymbolTable()
 
-    def run_lines(self, lines):
-        for line in lines:
-            line = line.strip()
+def eval_expr(expr):
+    expr = " ".join(expr)
 
-            if line == "" or line.startswith("#"):
-                continue
+    # replace variables
+    for var in symbol_table.table:
+        expr = expr.replace(var, str(symbol_table.get(var)))
 
-            self.run_line(line)
+    # replace functions
+    expr = expr.replace("force", "functions.force")
+    expr = expr.replace("kinetic_energy", "functions.kinetic_energy")
+    expr = expr.replace("ohm_current", "functions.ohm_current")
 
-    def run_line(self, line):
-        if line.startswith("let "):
-            self.handle_let(line)
+    return eval(expr)
 
-        elif line.startswith("print "):
-            self.handle_print(line)
+def interpret(ast):
+    for node in ast:
+        if hasattr(node, "name"):
+            val = eval_expr(node.expression)
+            symbol_table.set(node.name, val)
 
-        else:
-            print("Unknown statement:", line)
+        elif hasattr(node, "value"):
+            val = symbol_table.get(node.value)
+            print(val)
 
-    def handle_let(self, line):
-        line = line.replace("let ", "", 1)
-
-        if "=" not in line:
-            print("Syntax Error: missing =")
-            return
-
-        name, expression = line.split("=", 1)
-        name = name.strip()
-        expression = expression.strip()
-
-        value = self.evaluate_expression(expression)
-        self.symbol_table.add_or_update(name, value)
-
-    def handle_print(self, line):
-        expression = line.replace("print ", "", 1).strip()
-        value = self.evaluate_expression(expression)
-        print(value)
-
-    def evaluate_expression(self, expression):
-        parts = expression.split()
-        new_parts = []
-
-        for part in parts:
-            if part in self.symbol_table.table:
-                new_parts.append(str(self.symbol_table.get_value(part)))
-            else:
-                new_parts.append(part)
-
-        safe_expression = " ".join(new_parts)
-
-        try:
-            return eval(safe_expression)
-        except Exception:
-            print("Error evaluating expression:", expression)
-            return 0
+    symbol_table.print_table()
