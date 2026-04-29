@@ -1,33 +1,41 @@
-from interpreter import Engine9Interpreter
+from engine9 import Engine9Interpreter
 
 def main():
-    print("===== Engine9 Interactive Mode =====")
-    print("Type Engine9 code below.")
-    print("Type 'run' to execute.")
-    print("Type 'exit' to quit.\n")
+    interpreter = Engine9Interpreter()
+
+    print("===== Engine9 Interactive Interpreter =====")
+    print("Type Engine9 code.")
+    print("Type run to execute.")
+    print("Type sample to run sample_engine9.e9.")
+    print("Type clear to clear current code.")
+    print("Type exit to quit.\n")
 
     lines = []
 
     while True:
-        line = input("E9> ")
+        line = input("E9> ").strip()
 
         if line.lower() == "exit":
             print("Goodbye.")
             break
 
-        if line.lower() == "run":
-            interpreter = Engine9Interpreter()
-            print("\n===== PROGRAM OUTPUT =====")
-            interpreter.run_lines(lines)
-
-            print("\n===== SYMBOL TABLE =====")
-            interpreter.symbol_table.print_table()
-
+        elif line.lower() == "clear":
             lines = []
-            print("\nYou can type a new Engine9 program now.\n")
-            continue
+            print("Code cleared.\n")
 
-        lines.append(line)
+        elif line.lower() == "run":
+            interpreter = Engine9Interpreter()
+            interpreter.run_lines(lines)
+            interpreter.print_symbol_table()
+            lines = []
+
+        elif line.lower() == "sample":
+            interpreter = Engine9Interpreter()
+            interpreter.run_file("sample_engine9.e9")
+            interpreter.print_symbol_table()
+
+        else:
+            lines.append(line)
 
 if __name__ == "__main__":
     main()
