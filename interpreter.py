@@ -1,30 +1,36 @@
-from symbolTable import SymbolTable
+from symbol_table import SymbolTable
 import functions
 
-symbol_table = SymbolTable()
 
-def eval_expr(expr):
-    expr = " ".join(expr)
+class Engine9Interpreter:
+    def __init__(self):
+        self.symbol_table = SymbolTable()
 
-    # replace variables
-    for var in symbol_table.table:
-        expr = expr.replace(var, str(symbol_table.get(var)))
+    def eval_expr(self, expr):
+        # Replace variables with values
+        for var in self.symbol_table.table:
+            expr = expr.replace(var, str(self.symbol_table.get(var)))
 
-    # replace functions
-    expr = expr.replace("force", "functions.force")
-    expr = expr.replace("kinetic_energy", "functions.kinetic_energy")
-    expr = expr.replace("ohm_current", "functions.ohm_current")
+        # Replace built-in Engine9 functions
+        expr = expr.replace("force", "functions.force")
+        expr = expr.replace("kinetic_energy", "functions.kinetic_energy")
+        expr = expr.replace("ohm_current", "functions.ohm_current")
+        expr = expr.replace("work", "functions.work")
+        expr = expr.replace("power", "functions.power")
+        expr = expr.replace("pressure", "functions.pressure")
+        expr = expr.replace("density", "functions.density")
+        expr = expr.replace("momentum", "functions.momentum")
 
-    return eval(expr)
+        return eval(expr)
 
-def interpret(ast):
-    for node in ast:
-        if hasattr(node, "name"):
-            val = eval_expr(node.expression)
-            symbol_table.set(node.name, val)
+    def interpret(self, ast):
+        for node in ast:
+            if hasattr(node, "name"):
+                value = self.eval_expr(node.expression)
+                self.symbol_table.set(node.name, value)
 
-        elif hasattr(node, "value"):
-            val = symbol_table.get(node.value)
-            print(val)
+            elif hasattr(node, "value"):
+                value = self.eval_expr(node.value)
+                print(value)
 
-    symbol_table.print_table()
+        self.symbol_table.print_table()
