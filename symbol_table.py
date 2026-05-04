@@ -4,18 +4,26 @@ class SymbolTable:
 
     def set(self, name, value):
         if isinstance(value, int):
-            t = "int"
+            data_type = "int"
         elif isinstance(value, float):
-            t = "float"
+            data_type = "float"
         else:
-            t = "unknown"
+            data_type = "unknown"
 
-        self.table[name] = {"type": t, "value": value}
+        self.table[name] = {
+            "type": data_type,
+            "value": value
+        }
 
     def get(self, name):
+        if name not in self.table:
+            raise NameError(f"Variable '{name}' is not defined.")
         return self.table[name]["value"]
 
     def print_table(self):
-        print("\nSYMBOL TABLE")
-        for k, v in self.table.items():
-            print(f"{k} → {v}")
+        print("\n===== SYMBOL TABLE =====")
+        print(f"{'Variable':<15}{'Type':<10}{'Value':<10}")
+        print("-" * 35)
+
+        for name, data in self.table.items():
+            print(f"{name:<15}{data['type']:<10}{data['value']:<10}")
