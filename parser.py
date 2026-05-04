@@ -1,20 +1,22 @@
-from ast_nodes import LetNode, PrintNode, FuncCallNode
+from ast_nodes import LetNode, PrintNode
 
-def parse(tokens):
-    ast = []
-    i = 0
+def parse_line(line):
+    line = line.strip()
 
-    while i < len(tokens):
-        if tokens[i] == "let":
-            name = tokens[i+1]
-            expr = tokens[i+3:]
-            ast.append(LetNode(name, expr))
-            break
+    if line == "" or line.startswith("#"):
+        return None
 
-        elif tokens[i] == "print":
-            ast.append(PrintNode(tokens[i+1]))
-            break
+    if line.startswith("let "):
+        statement = line.replace("let ", "", 1)
 
-        i += 1
+        if "=" not in statement:
+            raise SyntaxError("Missing = in let statement")
 
-    return ast
+        name, expression = statement.split("=", 1)
+        return LetNode(name.strip(), expression.strip())
+
+    if line.startswith("print "):
+        value = line.replace("print ", "", 1).strip()
+        return PrintNode(value)
+
+    raise SyntaxError(f"Unknown statement: {line}")
