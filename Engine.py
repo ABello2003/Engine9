@@ -1,41 +1,37 @@
-from engine9 import Engine9Interpreter
+from parser import parse_line
+from interpreter import Engine9Interpreter
+
+
+def run_file(filename):
+    ast = []
+
+    with open(filename, "r") as f:
+        for line in f:
+            node = parse_line(line)
+            if node is not None:
+                ast.append(node)
+
+    engine = Engine9Interpreter()
+    engine.interpret(ast)
+
 
 def main():
-    interpreter = Engine9Interpreter()
-
-    print("===== Engine9 Interactive Interpreter =====")
-    print("Type Engine9 code.")
-    print("Type run to execute.")
-    print("Type sample to run sample_engine9.e9.")
-    print("Type clear to clear current code.")
-    print("Type exit to quit.\n")
-
-    lines = []
+    print("===== Engine9 Interpreter =====")
+    print("Type 'sample' to run example or 'exit' to quit")
 
     while True:
-        line = input("E9> ").strip()
+        cmd = input(">> ")
 
-        if line.lower() == "exit":
+        if cmd == "exit":
             print("Goodbye.")
             break
 
-        elif line.lower() == "clear":
-            lines = []
-            print("Code cleared.\n")
-
-        elif line.lower() == "run":
-            interpreter = Engine9Interpreter()
-            interpreter.run_lines(lines)
-            interpreter.print_symbol_table()
-            lines = []
-
-        elif line.lower() == "sample":
-            interpreter = Engine9Interpreter()
-            interpreter.run_file("sample_engine9.e9")
-            interpreter.print_symbol_table()
+        elif cmd == "sample":
+            run_file("sample.e9")
 
         else:
-            lines.append(line)
+            print("Unknown command")
+
 
 if __name__ == "__main__":
     main()
